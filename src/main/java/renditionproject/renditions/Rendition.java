@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
+import renditionproject.areas.Area;
 import renditionproject.users.User;
 
 @Entity
@@ -20,14 +21,13 @@ public class Rendition {
 	private long id;
 	@NotBlank
 	private int state; //valores pre definidos
-	//1 : inicializado
-	//2 : creado-pendiente-enviar
-	//3 : enviado-pendiente-revisar
-	//4 : aprobado-jefe
-	//5 : rechazado-jefe
-	//6 : aprobado-encargado
-	//7 : rechazado-encargado
-	//8 : cerrado
+	//1 : creada-pendiente-enviar
+	//2 : enviada-pendiente-revisar
+	//3 : aprobada-jefe
+	//4 : rechazada-jefe
+	//5 : aprobada-encargado
+	//6 : rechazada-encargado
+	//7 : cerrada
 	private Timestamp sentDatetime;
 	private boolean prettyCash; //caja chica
 	private String declineDescription;
@@ -39,11 +39,17 @@ public class Rendition {
 	@ManyToOne
 	private User boss;
 	@ManyToOne
-	private User manager;
+	private Area area;
 	
+	public Area getArea() {
+		return area;
+	}
+	public void setArea(Area area) {
+		this.area = area;
+	}
 	public Rendition() {}
 	public Rendition(long id, @NotBlank int state, Timestamp sentDatetime, boolean prettyCash,
-			String declineDescription, Timestamp lastUpdateDatetime, User employee, User boss, User manager) {
+			String declineDescription, Timestamp lastUpdateDatetime, User employee, User boss, Area area) {
 		super();
 		this.id = id;
 		this.state = state;
@@ -53,7 +59,7 @@ public class Rendition {
 		this.lastUpdateDatetime = lastUpdateDatetime;
 		this.employee = employee;
 		this.boss = boss;
-		this.manager = manager;
+		this.area = area;
 	}
 	public long getId() {
 		return id;
@@ -103,12 +109,7 @@ public class Rendition {
 	public void setBoss(User boss) {
 		this.boss = boss;
 	}
-	public User getManager() {
-		return manager;
-	}
-	public void setManager(User manager) {
-		this.manager = manager;
-	}
+
 	
 	
 	
