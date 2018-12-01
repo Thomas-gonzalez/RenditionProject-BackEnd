@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import renditionproject.expenses.ExpenseRepository;
+import renditionproject.expenses.ExpenseService;
 import renditionproject.users.User;
 import renditionproject.users.UserRepository;
 import renditionproject.usertypes.UserType;
@@ -18,6 +20,10 @@ public class RenditionService {
 	private RenditionRepository renditionRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private ExpenseRepository expenseRepository;
+	@Autowired
+	private ExpenseService expenseService;
 	
 	public Rendition getRendition(Long id) {
 		return renditionRepository.findById(id).get();
@@ -32,6 +38,7 @@ public class RenditionService {
 	public List<Rendition> getRenditionsByEmployeeUsername(String employeeUsername) {
 		List<Rendition> renditions = new ArrayList<>();
 		renditionRepository.findByEmployeeUsername(employeeUsername).forEach(renditions::add);
+		renditions = renditions.stream().filter(r -> !r.isClosed()).collect(Collectors.toList());
 		return renditions;
 	}
 
@@ -73,6 +80,7 @@ public class RenditionService {
 		//implementar notificacion
 		rendition = renditionRepository.save(rendition);
 		rendition.setSentDatetime(rendition.getLastUpdateDatetime());// investigar como obtener tiempo para no hacerlo asi.
+		renditionRepository.save(rendition);
 		return rendition;
 	}
 	public List<Rendition> getRenditionsByAreaId(int areaId) {
@@ -83,10 +91,10 @@ public class RenditionService {
 
 	public List<Rendition> getBossRenditionInbox(String bossUsername) {
 		int areaId = userRepository.findById(bossUsername).get().getArea().getId();
-		List<Rendition> renditions;
+		List<Rendition> renditions = getRenditionsByAreaId(areaId).stream().filter(r -> r.getState() == 2 && !r.isClosed()).
+				collect(Collectors.toList());
 		//filtrando por rendiciones enviadas, y por rendiciones no cerradas.
-		return renditions = getRenditionsByAreaId(areaId).stream().filter(r -> r.getState() == 2 && !r.isClosed()).
-				collect(Collectors.toList());	
+		return renditions;	
 	}
 	public List<Rendition> getManagerRenditionInbox() {
 		List<Rendition> openrenditions = getAllRenditions().stream().filter(r -> !r.isClosed() && (r.getState() == 4 || r.getState() == 6))
@@ -113,6 +121,17 @@ public class RenditionService {
 		Rendition rendition = getRendition(id);
 		rendition.setState(5);
 		rendition.setDeclineDescription(renditionDES.getDeclineDescription());
+		return renditionRepository.save(rendition);
+	}
+	
+	public void deleteRendition(long id) {
+		expenseRepository.findByRenditionId(id).forEach(expenseService::deleteExpenseByEntity);
+		renditionRepository.deleteById(id);
+	}
+	
+	public Rendition closeRendition(long id) {
+		Rendition rendition = getRendition(id);
+		rendition.setClosed(true);
 		return renditionRepository.save(rendition);
 	}
 

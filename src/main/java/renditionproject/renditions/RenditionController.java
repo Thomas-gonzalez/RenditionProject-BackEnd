@@ -81,6 +81,14 @@ public class RenditionController {
 	public Rendition renditionManagerDecline(@PathVariable long id, @RequestBody Rendition rendition) {
 		return renditionService.renditionManagerDecline(id, rendition);
 	}
-	
+	//borra la rendicion y sus gastos y las imagenes de cada gasto
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{employeeUsername}/renditions/{id}")
+	public void deleteRendition(@PathVariable long id) {
+		renditionService.deleteRendition(id);
+	}
+	@RequestMapping("{employeeUsername}/renditions/{id}/close")
+	public Rendition closeRendition(@PathVariable long id) {
+		return renditionService.closeRendition(id);
+	}
 	
 }

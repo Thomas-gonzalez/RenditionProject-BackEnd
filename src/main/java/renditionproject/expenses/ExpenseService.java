@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import renditionproject.images.ImageRepository;
 import renditionproject.renditions.Rendition;
 import renditionproject.renditions.RenditionRepository;
 
@@ -16,6 +17,8 @@ public class ExpenseService {
 	private ExpenseRepository expenseRepository;
 	@Autowired
 	private RenditionRepository renditionRepository;
+	@Autowired
+	private ImageRepository imageRepository;
 	
 	public List<Expense> getExpensesByRendition(long renditionId) {
 		List<Expense> expenses = new ArrayList<>();
@@ -33,5 +36,15 @@ public class ExpenseService {
 	}
 	public Expense getExpense(long id) {
 		return expenseRepository.findById(id).get();
+	}
+	
+	public void deleteExpense(long id) {
+		imageRepository.deleteAll(imageRepository.findByExpenseId(id));
+		expenseRepository.deleteById(id);
+	}
+	
+	public void deleteExpenseByEntity(Expense expense) {
+		imageRepository.deleteAll(imageRepository.findByExpenseId(expense.getId()));
+		expenseRepository.delete(expense);
 	}
 }

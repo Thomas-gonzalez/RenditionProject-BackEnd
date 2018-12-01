@@ -1,6 +1,5 @@
 package renditionproject.expenses;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +43,10 @@ public class ExpenseController {
 	@RequestMapping("/renditions/{renditionId}/expenses/{id}")
 	public Expense getExpense(@PathVariable long id) {
 		return expenseService.getExpense(id);
+	}
+	//borra el gasto y sus imagenes asociadas
+	@RequestMapping(method = RequestMethod.DELETE, value = "/renditions/{renditionId}/expenses/{id}")
+	public void deleteExpense(@PathVariable long id) {
+		expenseService.deleteExpense(id);
 	}
 }

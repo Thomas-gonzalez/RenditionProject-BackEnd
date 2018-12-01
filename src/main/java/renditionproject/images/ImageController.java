@@ -1,6 +1,5 @@
 package renditionproject.images;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,13 @@ public class ImageController {
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/expenses/{expenseId}/images")
 	public Image addImage(@RequestBody Image image, @PathVariable long expenseId) {
-		Image i1 = new Image();
-		i1.setAddress(image.getAddress());
 		Expense expense = expenseService.getExpense(expenseId);
-		return imageService.addImage(i1, expense);
+		return imageService.addImage(image, expense);
 	}
+	
+	@RequestMapping(method = RequestMethod.DELETE, value = "/expenses/{expenseId}/images/{id}")
+	public void deleteImageById(@PathVariable long id) {
+		imageService.deleteImage(id);
+	}
+
 }
