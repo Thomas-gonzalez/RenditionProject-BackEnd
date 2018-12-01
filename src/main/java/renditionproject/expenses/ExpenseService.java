@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import renditionproject.renditions.Rendition;
+import renditionproject.renditions.RenditionRepository;
 
 @Service
 public class ExpenseService {
 	
 	@Autowired
 	private ExpenseRepository expenseRepository;
+	@Autowired
+	private RenditionRepository renditionRepository;
 	
 	public List<Expense> getExpensesByRendition(long renditionId) {
 		List<Expense> expenses = new ArrayList<>();
@@ -20,9 +23,13 @@ public class ExpenseService {
 		return expenses;
 	}
 	
-	public void addExpense(Expense expense, Rendition rendition) {
+	public Expense addExpense(Expense expense, Rendition rendition) {
 		expense.setRendition(rendition);
-		expenseRepository.save(expense);
+		float valueTotal = rendition.getValueTotal() + expense.getValue();
+		rendition.setValueTotal(valueTotal);
+		expense = expenseRepository.save(expense);
+		renditionRepository.save(rendition);
+		return expense;
 	}
 	public Expense getExpense(long id) {
 		return expenseRepository.findById(id).get();

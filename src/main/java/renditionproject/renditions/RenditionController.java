@@ -1,6 +1,5 @@
 package renditionproject.renditions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class RenditionController {
 
 	@Autowired
@@ -29,8 +31,8 @@ public class RenditionController {
 	}
 	//guardar una rendicion (pre-envio), *solo para empleado*
 	@RequestMapping(method = RequestMethod.POST, value = "/{employeeUsername}/renditions")
-	public void addRendition(@RequestBody Rendition rendition, @PathVariable String employeeUsername) {
-		renditionService.addRendition(rendition, employeeUsername);
+	public Rendition addRendition(@RequestBody Rendition rendition, @PathVariable String employeeUsername) {
+		return renditionService.addRendition(rendition, employeeUsername);
 	}
 	//actualizar una rendicion (pre-envio), *solo para empleado*	
 	@RequestMapping(method = RequestMethod.PUT, value = "/{employeeUsername}/renditions")
@@ -43,15 +45,42 @@ public class RenditionController {
 		return renditionService.getRendition(id);
 	}
 	//rendicion cambia a estado enviada y por revisar y se muestra en la bandeja de el jefe (falta notificar)
-	@RequestMapping(method = RequestMethod.PUT, value = "/{employeeUsername}/renditions/{id}")
-	public void sendRendition(@PathVariable long id) {
-		renditionService.sendRendition(id);
+	@RequestMapping(method = RequestMethod.GET, value = "/{employeeUsername}/renditions/{id}/send")
+	public Rendition sendRendition(@PathVariable long id) {
+		return renditionService.sendRendition(id);
 	}
 	
 	//acceder a rendiciones para jefe
-	@RequestMapping("/boss/{bossUserame}/renditions")
+	@RequestMapping("/boss/{bossUsername}/renditions")
 	public List<Rendition> getBossRenditionInbox(@PathVariable String bossUsername) {
 		return renditionService.getBossRenditionInbox(bossUsername);
 	}
+	
+	//acceder a rendiciones para encargados
+	@RequestMapping("/manager/{managerUsername}/renditions")
+	public List<Rendition> getManagerRenditionInbox() {
+		return renditionService.getManagerRenditionInbox();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "boss/{bossUsername}/renditions/{id}/approve")
+	public Rendition renditionBossApproval(@PathVariable long id) {
+		return renditionService.renditionBossApproval(id);
+	}
+	//implement rejection
+	@RequestMapping(method = RequestMethod.POST, value ="boss/{bossUsername}/renditions/{id}/decline")
+	public Rendition renditionBossDecline(@PathVariable long id, @RequestBody Rendition rendition) {
+		return renditionService.renditionBossDecline(id, rendition);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "manager/{managerUsername}/renditions/{id}/approve")
+	public Rendition renditionManagerApproval(@PathVariable long id) {
+		return renditionService.renditionManagerApproval(id);
+	}
+	//implement rejection
+	@RequestMapping(method = RequestMethod.POST, value ="manager/{managerUsername}/renditions/{id}/decline")
+	public Rendition renditionManagerDecline(@PathVariable long id, @RequestBody Rendition rendition) {
+		return renditionService.renditionManagerDecline(id, rendition);
+	}
+	
 	
 }

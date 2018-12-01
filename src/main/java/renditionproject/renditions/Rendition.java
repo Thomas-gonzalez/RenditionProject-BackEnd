@@ -2,12 +2,11 @@ package renditionproject.renditions;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
-
 import org.hibernate.annotations.UpdateTimestamp;
 
 import renditionproject.areas.Area;
@@ -19,20 +18,21 @@ public class Rendition {
 	@Id
 	@GeneratedValue
 	private long id;
-	@NotBlank
+	@Column(nullable = false)
 	private int state; //valores pre definidos
 	//1 : creada-pendiente-enviar
 	//2 : enviada-pendiente-revisar
-	//3 : aprobada-jefe
-	//4 : rechazada-jefe
-	//5 : aprobada-encargado
-	//6 : rechazada-encargado
-	//7 : cerrada
+	//3 : rechazada-jefe
+	//4 : aprobada-jefe
+	//5 : rechazada-encargado
+	//6 : aprobada-encargado
+	private boolean closed;
 	private Timestamp sentDatetime;
-	private boolean prettyCash; //caja chica
+	private boolean pettyCash; //caja chica
 	private String declineDescription;
 	@UpdateTimestamp
 	private Timestamp lastUpdateDatetime;
+	private float valueTotal;
 	
 	@ManyToOne
 	private User employee;
@@ -41,20 +41,14 @@ public class Rendition {
 	@ManyToOne
 	private Area area;
 	
-	public Area getArea() {
-		return area;
-	}
-	public void setArea(Area area) {
-		this.area = area;
-	}
 	public Rendition() {}
-	public Rendition(long id, @NotBlank int state, Timestamp sentDatetime, boolean prettyCash,
+	public Rendition(long id, int state, Timestamp sentDatetime, boolean pettyCash,
 			String declineDescription, Timestamp lastUpdateDatetime, User employee, User boss, Area area) {
 		super();
 		this.id = id;
 		this.state = state;
 		this.sentDatetime = sentDatetime;
-		this.prettyCash = prettyCash;
+		this.pettyCash = pettyCash;
 		this.declineDescription = declineDescription;
 		this.lastUpdateDatetime = lastUpdateDatetime;
 		this.employee = employee;
@@ -78,12 +72,6 @@ public class Rendition {
 	}
 	public void setSentDatetime(Timestamp sentDatetime) {
 		this.sentDatetime = sentDatetime;
-	}
-	public boolean isPrettyCash() {
-		return prettyCash;
-	}
-	public void setPrettyCash(boolean prettyCash) {
-		this.prettyCash = prettyCash;
 	}
 	public String getDeclineDescription() {
 		return declineDescription;
@@ -110,6 +98,31 @@ public class Rendition {
 		this.boss = boss;
 	}
 
+	public boolean isClosed() {
+		return closed;
+	}
+	public void setClosed(boolean closed) {
+		this.closed = closed;
+	}
+	
+	public Area getArea() {
+		return area;
+	}
+	public void setArea(Area area) {
+		this.area = area;
+	}
+	public boolean isPettyCash() {
+		return pettyCash;
+	}
+	public void setPettyCash(boolean pettyCash) {
+		this.pettyCash = pettyCash;
+	}
+	public float getValueTotal() {
+		return valueTotal;
+	}
+	public void setValueTotal(float valueTotal) {
+		this.valueTotal = valueTotal;
+	}
 	
 	
 	

@@ -16,7 +16,6 @@ public class Expense {
 	
 	@Id
 	@GeneratedValue
-	@Column(nullable = false)
 	private long id;
 	private Date date;
 	private Float value;

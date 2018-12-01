@@ -21,11 +21,14 @@ public class User {
 	@Column(nullable = false)
 	private String name;
 	@Column(nullable = false)
+	private String email;
+	@Column(nullable = false)
 	private String passwordHash;
 	@Column(nullable = false)
 	private boolean deactivated;
 	
-	
+	private String token;
+			
 	@ManyToOne
 	private Company company;
 	@ManyToOne
@@ -34,8 +37,8 @@ public class User {
 	private UserType userType;
 	
 	public User() {}
-	public User(@NotNull String username, @NotNull String dni, @NotNull String name, @NotNull String passwordHash,
-			 Company company, Area area, UserType userType) {
+	public User(@NotNull String username, @NotNull String dni, @NotNull String name, @NotNull String email, @NotNull String passwordHash,
+			 Company company, Area area, UserType userType, String token) {
 		super();
 		this.username = username;
 		this.dni = dni;
@@ -45,6 +48,15 @@ public class User {
 		this.company = company;
 		this.area = area;
 		this.userType = userType;
+		this.email = email;
+		this.token = token;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	public String getUsername() {
@@ -67,6 +79,12 @@ public class User {
 	}
 	public String getPasswordHash() {
 		return passwordHash;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 	public void setPasswordHash(String passwordHash) {
 		this.passwordHash = passwordHash;

@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import renditionproject.renditions.Rendition;
 import renditionproject.renditions.RenditionService;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class ExpenseController {
 
 	@Autowired
@@ -25,15 +28,18 @@ public class ExpenseController {
 
 	@RequestMapping("renditions/{renditionId}/expenses")
 	public List<Expense> getExpensesByRendition(@PathVariable Long renditionId) {
-		List<Expense> expenses = new ArrayList<>();
-		expenseService.getExpensesByRendition(renditionId).forEach(expenses::add);
-		return expenses;
+		return expenseService.getExpensesByRendition(renditionId);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/renditions/{renditionId}/expenses")
-	public void addExpense(@RequestBody Expense expense, @PathVariable long renditionId) {
+	public Expense addExpense(@RequestBody Expense expense, @PathVariable long renditionId) {
+		Expense e1 = new Expense();
+		e1.setValue(expense.getValue());
+		e1.setComment(expense.getComment());
+		e1.setCurrency(expense.getCurrency());
+		e1.setDate(expense.getDate());
 		Rendition rendition = renditionService.getRendition(renditionId);
-		expenseService.addExpense(expense, rendition);
+		return expenseService.addExpense(e1, rendition);
 	}
 	@RequestMapping("/renditions/{renditionId}/expenses/{id}")
 	public Expense getExpense(@PathVariable long id) {

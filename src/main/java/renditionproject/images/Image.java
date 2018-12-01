@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
 
 import renditionproject.expenses.Expense;
@@ -20,17 +21,20 @@ public class Image {
 	@Column(nullable = false)
 	private long id;
 	@NotBlank
+	@Lob
 	private String address;
 	
 	@ManyToOne(optional = false)
 	private Expense expense;
 	
 	public Image() {}
-	public Image(long id, String address) {
+	public Image(long id, String address, Expense expense) {
 		super();
 		this.id = id;
 		this.address = address;
+		this.expense = expense;
 	}
+	
 	public long getId() {
 		return id;
 	}

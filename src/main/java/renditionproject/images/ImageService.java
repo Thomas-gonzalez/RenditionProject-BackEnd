@@ -21,9 +21,9 @@ public class ImageService {
 	}
 	
 	//solo guarda los datos de la imagen (direccion de archivo y llave foranea)
-	public void addImage(Image image, Expense expense) {
+	public Image addImage(Image image, Expense expense) {
 		image.setExpense(expense);
-		imageRepository.save(image);
+		return imageRepository.save(image);
 	}
 	
 	public Image getImage(long id) {
