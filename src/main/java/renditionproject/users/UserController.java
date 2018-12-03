@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,10 +62,10 @@ public class UserController {
 			throw new ServletException("User name not found.");
 		}
 
-		String pwd = user.getPasswordHash();
+		String encodedPassword = user.getPasswordHash();
 		String usr = user.getUsername();
-
-		if (!password.equals(pwd) || !username.equals(usr)) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		if (!encoder.matches(password, encodedPassword) || !username.equals(usr)) {
 			throw new ServletException("Invalid login. Please check your name and password.");
 		}
 

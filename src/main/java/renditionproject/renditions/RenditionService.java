@@ -51,6 +51,7 @@ public class RenditionService {
 		rendition.setArea(employee.getArea());
 		rendition.setEmployee(employee);
 		rendition.setState(1);
+		//asociando jefe
 		return renditionRepository.save(rendition);
 		
 	}
