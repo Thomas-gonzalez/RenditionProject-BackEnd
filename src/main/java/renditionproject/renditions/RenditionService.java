@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import renditionproject.areas.Area;
 import renditionproject.expenses.ExpenseRepository;
 import renditionproject.expenses.ExpenseService;
 import renditionproject.users.User;
@@ -48,10 +49,13 @@ public class RenditionService {
 		if (!userType.getName().equals("employee")) {
 			return null; //error tratando de crear una rendicion para un usuario no empleado
 		}
-		rendition.setArea(employee.getArea());
+		Area area = employee.getArea();
+		rendition.setArea(area);
 		rendition.setEmployee(employee);
 		rendition.setState(1);
 		//asociando jefe
+		User boss = area.getBoss();
+		rendition.setBoss(boss);
 		return renditionRepository.save(rendition);
 		
 	}
