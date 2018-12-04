@@ -35,8 +35,8 @@ public class UserController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/users")
-	public void addUser(@RequestBody User user) {
-		userService.addUser(user);
+	public User addUser(@RequestBody User user) {
+		return userService.addUser(user);
 	}
 	@RequestMapping("/users/{username}")
 	public User getUser(@PathVariable String username) {

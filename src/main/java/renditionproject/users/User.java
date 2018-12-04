@@ -6,6 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import renditionproject.areas.Area;
 import renditionproject.companies.Company;
 import renditionproject.usertypes.UserType;
@@ -32,6 +34,7 @@ public class User {
 	@ManyToOne
 	private Company company;
 	@ManyToOne
+	@JsonManagedReference
 	private Area area;
 	@ManyToOne(optional=false)
 	private UserType userType;
