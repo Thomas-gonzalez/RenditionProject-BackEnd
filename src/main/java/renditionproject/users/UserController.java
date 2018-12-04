@@ -38,9 +38,17 @@ public class UserController {
 	public User addUser(@RequestBody User user) {
 		return userService.addUser(user);
 	}
+	@RequestMapping(method = RequestMethod.POST, value = "/users/{username}")
+	public User updateUser(@PathVariable String username, @RequestBody User user) {
+		return userService.updateUser(user, username);
+	}
 	@RequestMapping("/users/{username}")
 	public User getUser(@PathVariable String username) {
 		return userService.getUser(username);
+	}
+	@RequestMapping(method = RequestMethod.DELETE, value = "/users/{username}")
+	public void deleteUser(@PathVariable String username) {
+		userService.deleteUser(username);
 	}
 	
 	@RequestMapping(value = "/users/login", method = RequestMethod.POST)
@@ -58,7 +66,7 @@ public class UserController {
 
 		User user = userService.getUser(username);
 		
-		if (user == null) {
+		if (user == null || user.isDeactivated()) {
 			throw new ServletException("User name not found.");
 		}
 

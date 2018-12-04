@@ -2,6 +2,7 @@ package renditionproject.users;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,6 +23,7 @@ public class UserService {
 	public List<User> getAllUsers() {
 		List<User> users = new ArrayList<>();
 		userRepository.findAll().forEach(users::add);
+		users = users.stream().filter(r -> !r.isDeactivated()).collect(Collectors.toList());
 		return users;
 	}
 	
@@ -42,6 +44,24 @@ public class UserService {
 
 	public User getUser(String username) {
 		return userRepository.findById(username).get();
+	}
+	
+	public User updateUser(User user, String username) {
+		User existingUser = userRepository.findById(username).get();
+		existingUser.setArea(user.getArea());
+		existingUser.setCompany(user.getCompany());
+		existingUser.setDni(user.getDni());
+		existingUser.setEmail(user.getEmail());
+		existingUser.setName(user.getName());
+		existingUser.setUserType(user.getUserType());
+		existingUser = userRepository.save(existingUser);
+		return existingUser;
+	}
+
+	public void deleteUser(String username) {
+		User user = userRepository.findById(username).get();
+		user.setDeactivated(true);
+		userRepository.save(user);
 	}
 	
 }
