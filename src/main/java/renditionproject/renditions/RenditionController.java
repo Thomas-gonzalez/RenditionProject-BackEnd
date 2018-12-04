@@ -69,6 +69,7 @@ public class RenditionController {
 	//implement rejection
 	@RequestMapping(method = RequestMethod.POST, value ="boss/{bossUsername}/renditions/{id}/decline")
 	public Rendition renditionBossDecline(@PathVariable long id, @RequestBody Rendition rendition) {
+		System.out.println(rendition);
 		return renditionService.renditionBossDecline(id, rendition);
 	}
 	

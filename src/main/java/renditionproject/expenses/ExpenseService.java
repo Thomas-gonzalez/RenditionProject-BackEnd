@@ -28,7 +28,7 @@ public class ExpenseService {
 	
 	public Expense addExpense(Expense expense, Rendition rendition) {
 		expense.setRendition(rendition);
-		float valueTotal = rendition.getValueTotal() + expense.getValue();
+		double valueTotal = rendition.getValueTotal() + expense.getValue();
 		rendition.setValueTotal(valueTotal);
 		expense = expenseRepository.save(expense);
 		renditionRepository.save(rendition);

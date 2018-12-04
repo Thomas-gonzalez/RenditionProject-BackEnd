@@ -15,7 +15,7 @@ public class Expense {
 	@GeneratedValue
 	private long id;
 	private Date date;
-	private Float value;
+	private Double value;
 	private String comment;
 	
 	@ManyToOne(optional = false)
@@ -26,7 +26,7 @@ public class Expense {
 	public Expense() {}
 
 
-	public Expense(long id, Date date, Float value, String comment, Currency currency, Rendition rendition) {
+	public Expense(long id, Date date, Double value, String comment, Currency currency, Rendition rendition) {
 		super();
 		this.id = id;
 		this.date = date;
@@ -57,12 +57,12 @@ public class Expense {
 	}
 
 
-	public Float getValue() {
+	public Double getValue() {
 		return value;
 	}
 
 
-	public void setValue(Float value) {
+	public void setValue(Double value) {
 		this.value = value;
 	}
 

@@ -32,7 +32,7 @@ public class Rendition {
 	private String declineDescription;
 	@UpdateTimestamp
 	private Timestamp lastUpdateDatetime;
-	private float valueTotal;
+	private double valueTotal;
 	
 	@ManyToOne
 	private User employee;
@@ -117,10 +117,10 @@ public class Rendition {
 	public void setPettyCash(boolean pettyCash) {
 		this.pettyCash = pettyCash;
 	}
-	public float getValueTotal() {
+	public double getValueTotal() {
 		return valueTotal;
 	}
-	public void setValueTotal(float valueTotal) {
+	public void setValueTotal(double valueTotal) {
 		this.valueTotal = valueTotal;
 	}
 	
