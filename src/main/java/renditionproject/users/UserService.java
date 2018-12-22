@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import renditionproject.areas.Area;
 import renditionproject.areas.AreaRepository;
-import renditionproject.usertypes.UserType;
 
 @Service
 public class UserService {
@@ -30,14 +28,7 @@ public class UserService {
 		BCryptPasswordEncoder encoder =  new BCryptPasswordEncoder();
 		user.setPasswordHash(encoder.encode(user.getPasswordHash()));
 		user = userRepository.save(user);
-		UserType userType = user.getUserType();
-		if (userType.getName() == "boss") {
-			Area area = user.getArea();
-			area.setBoss(user);
-			areaRepository.save(area);
-		}
 		return user;
-	
 	}
 
 	public User getUser(String username) {

@@ -2,12 +2,17 @@ package renditionproject.renditions;
 
 import java.util.List;
 
+import javax.servlet.ServletException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import renditionproject.profiles.ProfileService;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 
@@ -17,6 +22,8 @@ public class RenditionController {
 
 	@Autowired
 	private RenditionService renditionService;
+	@Autowired
+	private ProfileService profileService;
 
 	//para encargado
 	@RequestMapping("/renditions")
@@ -31,13 +38,11 @@ public class RenditionController {
 	}
 	//guardar una rendicion (pre-envio), *solo para empleado*
 	@RequestMapping(method = RequestMethod.POST, value = "/{employeeUsername}/renditions")
-	public Rendition addRendition(@RequestBody Rendition rendition, @PathVariable String employeeUsername) {
+	public Rendition addRendition(@RequestBody Rendition rendition, @PathVariable String employeeUsername) throws ServletException {
+		if (profileService.getEmployeeProfile(employeeUsername) == null) {
+			throw new ServletException("Este usuario no tiene perfil de empleado");
+		}
 		return renditionService.addRendition(rendition, employeeUsername);
-	}
-	//actualizar una rendicion (pre-envio), *solo para empleado*	
-	@RequestMapping(method = RequestMethod.PUT, value = "/{employeeUsername}/renditions")
-	public void updateRendition(@RequestBody Rendition rendition, @PathVariable String employeeUsername) {
-		renditionService.updateRendition(rendition, employeeUsername);
 	}
 	//rendicion por id
 	@RequestMapping("/{employeeUsername}/renditions/{id}")

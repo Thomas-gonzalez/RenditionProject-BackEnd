@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 import renditionproject.areas.Area;
 import renditionproject.expenses.ExpenseRepository;
 import renditionproject.expenses.ExpenseService;
+import renditionproject.profiles.EmployeeProfile;
+import renditionproject.profiles.EmployeeProfileRepository;
 import renditionproject.users.User;
 import renditionproject.users.UserRepository;
-import renditionproject.usertypes.UserType;
 
 @Service
 public class RenditionService {
@@ -25,6 +26,8 @@ public class RenditionService {
 	private ExpenseRepository expenseRepository;
 	@Autowired
 	private ExpenseService expenseService;
+	@Autowired
+	private EmployeeProfileRepository employeeProfileRepository;
 	
 	public Rendition getRendition(Long id) {
 		return renditionRepository.findById(id).get();
@@ -45,32 +48,16 @@ public class RenditionService {
 
 	public Rendition addRendition(Rendition rendition, String employeeUsername) {
 		User employee = userRepository.findById(employeeUsername).get();
-		UserType userType = employee.getUserType();
-		if (!userType.getName().equals("employee")) {
-			return null; //error tratando de crear una rendicion para un usuario no empleado
-		}
-		Area area = employee.getArea();
+		EmployeeProfile employeeProfile = employeeProfileRepository.findByUserUsername(employeeUsername).get();
+		Area area = employeeProfile.getArea();
 		rendition.setArea(area);
 		rendition.setEmployee(employee);
 		rendition.setState(1);
+		rendition.setValueTotal(0);
 		//asociando jefe
-		User boss = area.getBoss();
+		User boss = employeeProfile.getProfileOfBoss().getUser();
 		rendition.setBoss(boss);
 		return renditionRepository.save(rendition);
-		
-	}
-
-	public void updateRendition(Rendition rendition, String employeeUsername) {
-		User employee = userRepository.findById(employeeUsername).get();
-		UserType userType = employee.getUserType();
-		if (!userType.getName().equals("employee")) {
-			return; //error tratando de crear una rendicion para un usuario no empleado
-		}
-		rendition.setArea(employee.getArea());
-		rendition.setEmployee(employee);
-		rendition.setState(1);
-		rendition.setValueTotal(0);
-		renditionRepository.save(rendition);		
 		
 	}
 
@@ -81,7 +68,6 @@ public class RenditionService {
 	public Rendition sendRendition(long id) {
 		Rendition rendition = getRendition(id);
 		if (rendition.getState() < 2) rendition.setState(2); //proteccion ante que se llame este metodo al estar ya rechazado/aprobado
-		renditionRepository.save(rendition);//jefe se le muestran rendiciones en este estado
 		//implementar notificacion
 		rendition = renditionRepository.save(rendition);
 		rendition.setSentDatetime(rendition.getLastUpdateDatetime());// investigar como obtener tiempo para no hacerlo asi.
@@ -93,10 +79,11 @@ public class RenditionService {
 		renditionRepository.findByAreaId(areaId).forEach(renditions::add);
 		return renditions;
 	}
-
+	
 	public List<Rendition> getBossRenditionInbox(String bossUsername) {
-		int areaId = userRepository.findById(bossUsername).get().getArea().getId();
-		List<Rendition> renditions = getRenditionsByAreaId(areaId).stream().filter(r -> r.getState() == 2 && !r.isClosed()).
+		List<Rendition> renditions = new ArrayList<>();
+		renditionRepository.findByBossUsername(bossUsername).forEach(renditions::add);
+		renditions = renditions.stream().filter(r -> r.getState() == 2 && !r.isClosed()).
 				collect(Collectors.toList());
 		//filtrando por rendiciones enviadas, y por rendiciones no cerradas.
 		return renditions;	

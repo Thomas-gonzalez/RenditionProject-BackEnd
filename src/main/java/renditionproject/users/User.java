@@ -6,11 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import renditionproject.areas.Area;
 import renditionproject.companies.Company;
-import renditionproject.usertypes.UserType;
 
 @Entity
 public class User {
@@ -34,14 +31,11 @@ public class User {
 	@ManyToOne
 	private Company company;
 	@ManyToOne
-	@JsonManagedReference
 	private Area area;
-	@ManyToOne(optional=false)
-	private UserType userType;
 	
 	public User() {}
 	public User(@NotNull String username, @NotNull String dni, @NotNull String name, @NotNull String email, @NotNull String passwordHash,
-			 Company company, Area area, UserType userType, String token) {
+			 Company company, Area area, String token) {
 		super();
 		this.username = username;
 		this.dni = dni;
@@ -50,7 +44,6 @@ public class User {
 		this.deactivated = false;
 		this.company = company;
 		this.area = area;
-		this.userType = userType;
 		this.email = email;
 		this.token = token;
 	}
@@ -110,12 +103,5 @@ public class User {
 	public void setArea(Area area) {
 		this.area = area;
 	}
-	public UserType getUserType() {
-		return userType;
-	}
-	public void setUserType(UserType userType) {
-		this.userType = userType;
-	}
-	
 	
 }

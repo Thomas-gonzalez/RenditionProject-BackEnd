@@ -28,7 +28,7 @@ public class ExpenseService {
 	
 	public Expense addExpense(Expense expense, Rendition rendition) {
 		expense.setRendition(rendition);
-		float valueTotal = rendition.getValueTotal() + expense.getValue();
+		double valueTotal = rendition.getValueTotal() + expense.getValue();
 		rendition.setValueTotal(valueTotal);
 		expense = expenseRepository.save(expense);
 		renditionRepository.save(rendition);
@@ -40,11 +40,18 @@ public class ExpenseService {
 	
 	public void deleteExpense(long id) {
 		imageRepository.deleteAll(imageRepository.findByExpenseId(id));
+		Expense expense = expenseRepository.findById(id).get();
+		Rendition rendition = expense.getRendition();
+		rendition.setValueTotal(rendition.getValueTotal() - expense.getValue());
+		renditionRepository.save(rendition);
 		expenseRepository.deleteById(id);
 	}
 	
 	public void deleteExpenseByEntity(Expense expense) {
 		imageRepository.deleteAll(imageRepository.findByExpenseId(expense.getId()));
+		Rendition rendition = expense.getRendition();
+		rendition.setValueTotal(rendition.getValueTotal() - expense.getValue());
+		renditionRepository.save(rendition);
 		expenseRepository.delete(expense);
 	}
 }

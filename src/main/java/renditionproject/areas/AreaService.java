@@ -18,7 +18,7 @@ public class AreaService {
 		return areas;
 	}
 
-	public void addArea(Area area) {
-		areaRepository.save(area);
+	public Area addArea(Area area) {
+		return areaRepository.save(area);
 	}
 }

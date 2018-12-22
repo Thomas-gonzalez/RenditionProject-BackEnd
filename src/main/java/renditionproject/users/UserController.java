@@ -1,6 +1,5 @@
 package renditionproject.users;
 
-import renditionproject.usertypes.UserType;
 import java.util.List;
 import java.util.Date;
 
@@ -26,12 +25,6 @@ public class UserController {
 	@RequestMapping("/users")
 	public List<User> getAllUsers() {
 		return userService.getAllUsers();
-	}
-	
-	@RequestMapping("/users/{username}/type")
-	public UserType getUserType(@PathVariable String username) {
-		User user= userService.getUser(username);
-		return user.getUserType();
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/users")

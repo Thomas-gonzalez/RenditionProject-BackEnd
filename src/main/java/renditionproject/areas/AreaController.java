@@ -22,7 +22,7 @@ public class AreaController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/areas")
-	public void addArea(@RequestBody Area area) {
-		areaService.addArea(area);
+	public Area addArea(@RequestBody Area area) {
+		return areaService.addArea(area);
 	}
 }
