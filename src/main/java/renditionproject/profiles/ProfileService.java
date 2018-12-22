@@ -2,6 +2,7 @@ package renditionproject.profiles;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,19 +64,29 @@ public class ProfileService {
 	}
 	
 	public BossProfile getBossProfile(String username) {
-		return bossProfileRepository.findByUserUsername(username).get();
+		Optional<BossProfile> bossProfile = bossProfileRepository.findByUserUsername(username);
+		if (bossProfile == null) {
+			return null;
+		}
+		return bossProfile.get();
 	}
 	
 	public EmployeeProfile getEmployeeProfile(String username) {
-		return employeeProfileRepository.findByUserUsername(username).get();
+		Optional<EmployeeProfile> employeeProfile =  employeeProfileRepository.findByUserUsername(username);
+		if (employeeProfile == null) return null;
+		return employeeProfile.get();
 	}
 	
 	public ManagerProfile getManagerProfile(String username) {
-		return managerProfileRepository.findByUserUsername(username).get();
+		Optional<ManagerProfile> managerProfile = managerProfileRepository.findByUserUsername(username);
+		if (managerProfile == null) return null;
+		return managerProfile.get();
 	}
 	
 	public AdminProfile getAdminProfile(String username) {
-		return adminProfileRepository.findByUserUsername(username).get();
+		Optional<AdminProfile> adminProfile = adminProfileRepository.findByUserUsername(username);
+		if (adminProfile == null) return null;
+		return adminProfile.get();
 	}
 	
 }
