@@ -65,28 +65,30 @@ public class ProfileService {
 	
 	public BossProfile getBossProfile(String username) {
 		Optional<BossProfile> bossProfile = bossProfileRepository.findByUserUsername(username);
-		if (bossProfile == null) {
+		if (!bossProfile.isPresent()) {
 			return null;
 		}
-		return bossProfile.get();
+		else return bossProfile.get();
 	}
 	
 	public EmployeeProfile getEmployeeProfile(String username) {
 		Optional<EmployeeProfile> employeeProfile =  employeeProfileRepository.findByUserUsername(username);
-		if (employeeProfile == null) return null;
-		return employeeProfile.get();
+		if (!employeeProfile.isPresent()) {
+			return null;
+		}
+		else return employeeProfile.get();
 	}
 	
 	public ManagerProfile getManagerProfile(String username) {
 		Optional<ManagerProfile> managerProfile = managerProfileRepository.findByUserUsername(username);
-		if (managerProfile == null) return null;
-		return managerProfile.get();
+		if (!managerProfile.isPresent()) return null;
+		else return managerProfile.get();
 	}
 	
 	public AdminProfile getAdminProfile(String username) {
 		Optional<AdminProfile> adminProfile = adminProfileRepository.findByUserUsername(username);
-		if (adminProfile == null) return null;
-		return adminProfile.get();
+		if (!adminProfile.isPresent()) return null;
+		else return adminProfile.get();
 	}
 	
 }
