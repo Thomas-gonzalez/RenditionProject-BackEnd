@@ -72,6 +72,25 @@ public class ProfileController {
 		return profileService.getAdminProfile(username);
 	}
 	
+	@RequestMapping(method = RequestMethod.DELETE, value = "profiles/{username}/admin/delete")
+	public void deleteAdminProfile(@PathVariable String username) {
+		profileService.deleteAdminProfile(username);
+	}
 	
+	@RequestMapping(method = RequestMethod.DELETE, value = "profiles/{username}/manager/delete")
+	public void deleteManagerProfile(@PathVariable String username) {
+		profileService.deleteManagerProfile(username);
+	}
+	
+	@RequestMapping(method = RequestMethod.DELETE, value = "profiles/{username}/employee/delete")
+	public void deleteEmployeeProfile(@PathVariable String username) {
+		profileService.deleteEmployeeProfile(username);
+	}
+	
+	//cambia de jefe mediante el username del nuevo jefe, recibe JSON vacio
+	@RequestMapping(method = RequestMethod.POST, value = "profiles/{oldBossUsername}/boss/{newBossUsername}")
+	public BossProfile reAssignBossProfile(@PathVariable String oldBossUsername, @PathVariable String newBossUsername) {
+		return profileService.reAssignBossProfile(oldBossUsername, newBossUsername);
+	}
 
 }

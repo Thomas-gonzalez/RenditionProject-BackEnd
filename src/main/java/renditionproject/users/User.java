@@ -30,8 +30,6 @@ public class User {
 			
 	@ManyToOne
 	private Company company;
-	@ManyToOne
-	private Area area;
 	
 	public User() {}
 	public User(@NotNull String username, @NotNull String dni, @NotNull String name, @NotNull String email, @NotNull String passwordHash,
@@ -43,7 +41,6 @@ public class User {
 		this.passwordHash = passwordHash;
 		this.deactivated = false;
 		this.company = company;
-		this.area = area;
 		this.email = email;
 		this.token = token;
 	}
@@ -97,11 +94,6 @@ public class User {
 	public void setCompany(Company company) {
 		this.company = company;
 	}
-	public Area getArea() {
-		return area;
-	}
-	public void setArea(Area area) {
-		this.area = area;
-	}
+
 	
 }

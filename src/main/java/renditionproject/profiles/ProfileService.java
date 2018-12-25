@@ -90,5 +90,34 @@ public class ProfileService {
 		if (!adminProfile.isPresent()) return null;
 		else return adminProfile.get();
 	}
+	//deletes
+	public void deleteAdminProfile(String username) {
+		Optional<AdminProfile> adminProfile = adminProfileRepository.findByUserUsername(username);
+		if (!adminProfile.isPresent()) return;
+		else adminProfileRepository.delete(adminProfile.get());	
+	}
+	
+	public void deleteManagerProfile(String username) {
+		Optional<ManagerProfile> managerProfile = managerProfileRepository.findByUserUsername(username);
+		if (!managerProfile.isPresent()) return;
+		else managerProfileRepository.delete(managerProfile.get());
+	}
+	
+	public void deleteEmployeeProfile(String username) {
+		Optional<EmployeeProfile> employeeProfile = employeeProfileRepository.findByUserUsername(username);
+		if (!employeeProfile.isPresent()) return;
+		else employeeProfileRepository.delete(employeeProfile.get());
+	}
+	
+	//se reasigna el perfil de jefe a un nuevo usuario.
+	public BossProfile reAssignBossProfile(String oldBossUsername, String newBossUsername) {
+		Optional<BossProfile> bossProfile = bossProfileRepository.findByUserUsername(oldBossUsername);
+		Optional<User> newBoss = userRepository.findById(newBossUsername);
+		if (!bossProfile.isPresent() || !newBoss.isPresent()) return null;
+		BossProfile bossP = bossProfile.get();
+		bossP.setUser(newBoss.get());
+		return bossProfileRepository.save(bossP);
+		
+	}
 	
 }

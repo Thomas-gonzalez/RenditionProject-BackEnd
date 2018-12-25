@@ -39,7 +39,6 @@ public class UserService {
 	
 	public User updateUser(User user, String username) {
 		User existingUser = userRepository.findById(username).get();
-		existingUser.setArea(user.getArea());
 		existingUser.setCompany(user.getCompany());
 		existingUser.setDni(user.getDni());
 		existingUser.setEmail(user.getEmail());

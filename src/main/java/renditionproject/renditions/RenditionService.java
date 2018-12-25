@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import renditionproject.areas.Area;
@@ -28,6 +31,9 @@ public class RenditionService {
 	private ExpenseService expenseService;
 	@Autowired
 	private EmployeeProfileRepository employeeProfileRepository;
+	@Autowired
+	private JavaMailSender javaMailSender;
+	
 	
 	public Rendition getRendition(Long id) {
 		return renditionRepository.findById(id).get();
@@ -67,12 +73,29 @@ public class RenditionService {
 
 	public Rendition sendRendition(long id) {
 		Rendition rendition = getRendition(id);
-		if (rendition.getState() < 2) rendition.setState(2); //proteccion ante que se llame este metodo al estar ya rechazado/aprobado
-		//implementar notificacion
+		if (rendition.getState() < 2) rendition.setState(2); //mover a controlador
 		rendition = renditionRepository.save(rendition);
-		rendition.setSentDatetime(rendition.getLastUpdateDatetime());// investigar como obtener tiempo para no hacerlo asi.
-		renditionRepository.save(rendition);
+		rendition.setSentDatetime(rendition.getLastUpdateDatetime());
+		rendition = renditionRepository.save(rendition);
+		
+		//implementar notificacion por mail
+		try {
+			User recipient = rendition.getBoss();
+			String text = recipient.getName() + " ha enviado una nueva rendición de gastos.";
+			sendEmail(recipient, text);
+		} catch(MailException mailException) {
+			//error catch
+			System.out.println(mailException.getMessage());
+		}
 		return rendition;
+	}
+	public void sendEmail(User recipient, String textbody) throws MailException {
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(recipient.getEmail());
+		mail.setSubject("Rendición de Gastos");
+		mail.setText(textbody);
+		mail.setFrom("tasdf@mail.udp.cl");
+		javaMailSender.send(mail);
 	}
 	public List<Rendition> getRenditionsByAreaId(int areaId) {
 		List<Rendition> renditions = new ArrayList<>();
@@ -102,18 +125,52 @@ public class RenditionService {
 		Rendition rendition = getRendition(id);
 		rendition.setState(3);
 		rendition.setDeclineDescription(renditionDES.getDeclineDescription());
-		return renditionRepository.save(rendition);
+		rendition = renditionRepository.save(rendition);
+		
+		//notificacion por mail
+		try {
+			User recipient = rendition.getEmployee();
+			String text = "Su rendición (id: " + rendition.getId() + ") fue rechazada. \nRazon de rechazo: \n" + rendition.getDeclineDescription();
+			sendEmail(recipient, text);
+		} catch (MailException mailException) {
+			System.out.println(mailException.getMessage());
+		}
+		
+		
+		return rendition;
 	}
 	public Rendition renditionManagerApproval(long id) {
 		Rendition rendition = getRendition(id);
 		rendition.setState(6);
-		return renditionRepository.save(rendition);
+		rendition = renditionRepository.save(rendition);
+		
+		//notificacion por email
+		try {
+			User recipient = rendition.getEmployee();
+			String text = "Su rendición (id: " + rendition.getId() + ") fue aprobada";
+			sendEmail(recipient, text);
+		} catch (MailException mailException) {
+			System.out.println(mailException.getMessage());
+		}
+		
+		return rendition;
 	}
 	public Rendition renditionManagerDecline(long id, Rendition renditionDES) {
 		Rendition rendition = getRendition(id);
 		rendition.setState(5);
 		rendition.setDeclineDescription(renditionDES.getDeclineDescription());
-		return renditionRepository.save(rendition);
+		rendition = renditionRepository.save(rendition);
+		
+		//notificacion por mail
+		try {
+			User recipient = rendition.getEmployee();
+			String text = "Su rendición (id: " + rendition.getId() + ") fue rechazada. \nRazon de rechazo: \n" + rendition.getDeclineDescription();
+			sendEmail(recipient, text);
+		} catch (MailException mailException) {
+			System.out.println(mailException.getMessage());
+		}
+		
+		return rendition;
 	}
 	
 	public void deleteRendition(long id) {
