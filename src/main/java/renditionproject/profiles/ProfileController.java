@@ -21,7 +21,8 @@ public class ProfileController {
 	
 	//asigna rol de jefe a un usuario, requiere en el JSON el valor de "area".
 	@RequestMapping(method = RequestMethod.POST, value = "profiles/{username}/boss")
-	public BossProfile AddBossProfile(@RequestBody BossProfile bossProfile, @PathVariable String username) {
+	public BossProfile AddBossProfile(@RequestBody BossProfile bossProfile, @PathVariable String username) throws ServletException {
+		if (profileService.getBossProfile(username) != null) throw new ServletException("Usuario ya posee un perfil de jefe");
 		return profileService.AddBossProfile(bossProfile, username);
 	}
 	

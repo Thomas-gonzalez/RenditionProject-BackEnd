@@ -32,13 +32,8 @@ public class ExpenseController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/renditions/{renditionId}/expenses")
 	public Expense addExpense(@RequestBody Expense expense, @PathVariable long renditionId) {
-		Expense e1 = new Expense();
-		e1.setValue(expense.getValue());
-		e1.setComment(expense.getComment());
-		e1.setCurrency(expense.getCurrency());
-		e1.setDate(expense.getDate());
 		Rendition rendition = renditionService.getRendition(renditionId);
-		return expenseService.addExpense(e1, rendition);
+		return expenseService.addExpense(expense, rendition);
 	}
 	@RequestMapping("/renditions/{renditionId}/expenses/{id}")
 	public Expense getExpense(@PathVariable long id) {

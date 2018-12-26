@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.ServletException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import renditionproject.profiles.ProfileService;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -21,6 +23,8 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ProfileService profileService;
 	
 	@RequestMapping("/users")
 	public List<User> getAllUsers() {
@@ -40,7 +44,8 @@ public class UserController {
 		return userService.getUser(username);
 	}
 	@RequestMapping(method = RequestMethod.DELETE, value = "/users/{username}")
-	public void deleteUser(@PathVariable String username) {
+	public void deleteUser(@PathVariable String username) throws ServletException {
+		if (profileService.getBossProfile(username) != null) throw new ServletException("Usuario tiene perfil de jefe, debe reemplazar jefe antes de eliminarlo.");
 		userService.deleteUser(username);
 	}
 	

@@ -15,11 +15,11 @@ public class User {
 	@Id
 	@NotNull
 	private String username;
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String dni;
 	@Column(nullable = false)
 	private String name;
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String email;
 	@Column(nullable = false)
 	private String passwordHash;

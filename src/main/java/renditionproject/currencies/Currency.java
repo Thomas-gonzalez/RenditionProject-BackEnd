@@ -13,7 +13,7 @@ public class Currency {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(nullable = false)
 	private int id;
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 	
 	public Currency() {}
