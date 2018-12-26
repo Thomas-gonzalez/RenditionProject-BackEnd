@@ -111,8 +111,9 @@ public class RenditionService {
 		//filtrando por rendiciones enviadas, y por rendiciones no cerradas.
 		return renditions;	
 	}
-	public List<Rendition> getManagerRenditionInbox() {
-		List<Rendition> openrenditions = getAllRenditions().stream().filter(r -> !r.isClosed() && (r.getState() == 4 || r.getState() == 6))
+	public List<Rendition> getManagerRenditionInbox(String managerUsername) {
+		List<Rendition> openrenditions = getAllRenditions().stream().filter(r -> !r.isClosed() && r.getEmployee().getUsername() != managerUsername 
+				&& (r.getState() == 4 || r.getState() == 6))
 				.collect(Collectors.toList());
 		return openrenditions;
 	}

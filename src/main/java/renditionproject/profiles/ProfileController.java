@@ -2,6 +2,8 @@ package renditionproject.profiles;
 
 import java.util.List;
 
+import javax.servlet.ServletException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +27,9 @@ public class ProfileController {
 	
 	//asigna rol de empleado a un usuario con jefe explicito, requiere en el JSON el valor de "area".
 	@RequestMapping(method = RequestMethod.POST, value = "profiles/{username}/employee/{bossUsername}")
-	public EmployeeProfile AddEmployeeProfile(@RequestBody EmployeeProfile employeeProfile, @PathVariable String username, @PathVariable String bossUsername) {
+	public EmployeeProfile AddEmployeeProfile(@RequestBody EmployeeProfile employeeProfile, @PathVariable String username, @PathVariable String bossUsername) 
+	throws ServletException {
+		if (username == bossUsername) throw new ServletException("El jefe debe ser distinto al usuario");
 		return profileService.AddEmployeeProfile(employeeProfile, username, bossUsername);
 	}
 	

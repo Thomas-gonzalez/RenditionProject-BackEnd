@@ -63,8 +63,8 @@ public class RenditionController {
 	
 	//acceder a rendiciones para encargados
 	@RequestMapping("/manager/{managerUsername}/renditions")
-	public List<Rendition> getManagerRenditionInbox() {
-		return renditionService.getManagerRenditionInbox();
+	public List<Rendition> getManagerRenditionInbox(@PathVariable String managerUsername) {
+		return renditionService.getManagerRenditionInbox(managerUsername);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "boss/{bossUsername}/renditions/{id}/approve")
